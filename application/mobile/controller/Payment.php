@@ -68,6 +68,9 @@ class Payment extends MobileBase
             $this->error('请先登录', U('User/login'));
         }
 
+        //支付上传凭证   zgp
+        //
+
         // 修改订单的支付方式 苹果支付完成，再次打开本地址，不会带上order_id
         $order_id = I('order_id/d'); // 订单id
         if(is_ios()  && empty($order_id)){

@@ -480,7 +480,12 @@ class Goods extends Base {
                 
             }
         }
-        
+        if($data['is_gift_pack'] != 1){//非礼包，价格设置为零
+            $data['gold_card_price'] = 0;
+            $data['brick_card_price'] = 0;
+            $data['fine_brick_card_price'] = 0;
+            $data['second_buy_price'] = 0;
+        }
         $goods->data($data, true);
         $goods->last_update = time();
         $goods->price_ladder = true;

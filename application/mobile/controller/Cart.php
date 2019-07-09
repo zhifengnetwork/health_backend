@@ -323,28 +323,54 @@ class Cart extends MobileBase {
         if($order['prom_type'] == 4 || in_array(1,$orderGoodsPromType)){
             $payment_where['code'] = array('neq','cod');
         }
-        $paymentList = M('Plugin')->where($payment_where)->select();
-        $paymentList = convert_arr_key($paymentList, 'code');
 
-        foreach($paymentList as $key => $val)
-        {
-            $val['config_value'] = unserialize($val['config_value']);
-            if($val['config_value']['is_bank'] == 2)
-            {
-                $bankCodeList[$val['code']] = unserialize($val['bank_code']);
-            }
-            if($key != 'cod' && (($key == 'weixin' && !is_weixin()) // 不是微信app,就不能微信付，只能weixinH5付,用于手机浏览器
-                || ($key != 'weixin' && is_weixin()) //微信app上浏览，只能微信
-                || ($key != 'alipayMobile' && is_alipay()))){ //在支付宝APP上浏览，只能用支付宝支付
-                unset($paymentList[$key]);
+        //读取配置列表
+        $paymentList = null;
+        $pay_way = Db::name('config')->where('inc_type','pay_setting')->select();
+        if($pay_way){
+            foreach($pay_way as $k=>$v){
+                $decode = json_decode($v['value'],true);
+                if($v['name'] == 'wechat'){
+                    $paymentList['weixin']['name'] = '账户：'.$decode['code'];
+                    $paymentList['weixin']['img'] = SITE_URL.$decode['img'];
+                    $paymentList['weixin']['code'] = 'alipayMobile';
+                    $paymentList['weixin']['type'] = 'payment';
+                    $paymentList['weixin']['icon'] = 'logo.jpg';
+                }elseif($v['name'] == 'ali'){
+                    $paymentList['alipayMobile']['name'] = '账户：'.$decode['code'];
+                    $paymentList['alipayMobile']['img'] = SITE_URL.$decode['img'];
+                    $paymentList['alipayMobile']['code'] = 'weixin';
+                    $paymentList['alipayMobile']['type'] = 'payment';
+                    $paymentList['alipayMobile']['icon'] = 'logo.jpg';
+                }
+
             }
         }
 
-        $bank_img = include APP_PATH.'home/bank.php'; // 银行对应图片
+//        $paymentList = M('Plugin')->where($payment_where)->select();
+//        $paymentList = convert_arr_key($paymentList, 'code');
+//        print_r($paymentList);die;
+//
+//        foreach($paymentList as $key => $val)
+//        {
+//            $val['config_value'] = unserialize($val['config_value']);
+//            if($val['config_value']['is_bank'] == 2)
+//            {
+//                $bankCodeList[$val['code']] = unserialize($val['bank_code']);
+//            }
+//            if($key != 'cod' && (($key == 'weixin' && !is_weixin()) // 不是微信app,就不能微信付，只能weixinH5付,用于手机浏览器
+//                || ($key != 'weixin' && is_weixin()) //微信app上浏览，只能微信
+//                || ($key != 'alipayMobile' && is_alipay()))){ //在支付宝APP上浏览，只能用支付宝支付
+//                unset($paymentList[$key]);
+//            }
+//        }
+
+//        $bank_img = include APP_PATH.'home/bank.php'; // 银行对应图片
+
         $this->assign('paymentList',$paymentList);
-        $this->assign('bank_img',$bank_img);
+//        $this->assign('bank_img',$bank_img);
         $this->assign('order',$order);
-        $this->assign('bankCodeList',$bankCodeList);
+//        $this->assign('bankCodeList',$bankCodeList);
         $this->assign('pay_date',date('Y-m-d', strtotime("+1 day")));
         return $this->fetch();
     }

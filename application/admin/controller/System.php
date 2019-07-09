@@ -19,6 +19,7 @@ use app\admin\logic\GoodsLogic;
 use app\common\logic\ModuleLogic;
 use think\db;
 use think\Cache;
+use think\Request;
 
 class System extends Base
 {
@@ -57,6 +58,58 @@ class System extends Base
         }
 		$this->assign('config',$config);//当前配置项
 		return $this->fetch($inc_type);
+    }
+
+    //支付设置
+    public function pay_setting(Request $request)
+    {
+        $type = "pay_setting";
+        if($_POST){
+            $info = input('post.');
+            $files = $request->file();
+            if($files){
+//            $img_name = md5(mt_rand(0,100000).time()); //文件名
+                $img_path = 'public/upload/paycode/';
+                if(!is_dir(ROOT_PATH.$img_path)){
+                    mkdir(ROOT_PATH.$img_path,0777,true);
+                }
+
+                if(isset($files['file_1'])){
+                    $ali = $files['file_1']->getInfo();
+                    $ali['name'] = 'ali_code.png';
+                    $ali_code = '/'.$img_path.$ali['name'];//dump($info);die;
+                    move_uploaded_file($ali['tmp_name'], ROOT_PATH . '/' . $img_path . $ali['name']);
+                    Db::name('config')->where(['inc_type'=>$type,'name'=>'ali_code'])->update(['value'=>$ali_code]);
+                };
+                if(isset($files['file_2'])) {
+                    $wechat = $files['file_2']->getInfo();
+                    $wechat['name'] = 'wechat_code.png';
+                    $wechat_code = '/'.$img_path.$wechat['name'];
+                    move_uploaded_file($wechat['tmp_name'], ROOT_PATH . '/' . $img_path . $wechat['name']);
+                    Db::name('config')->where(['inc_type'=>$type,'name'=>'wechat_code'])->update(['value'=>$wechat_code]);
+                }
+//                $info['ali_code'] = '/'.$img_path.$ali['name'];
+//                $info['wechat_code'] = '/'.$img_path.$wechat['name'];
+
+            }
+//            foreach($info as $k=>$v){
+//                if(Db::name('config')->where(['type'=>$type,'name'=>$k])->find()){
+//                    Db::name('config')->where(['type'=>$type,'name'=>$k])->update(['value'=>$v]);
+//                }else{
+//                    Db::name('config')->insert(['name'=>$k,'value'=>$v,'type'=>$type]);
+//                }
+//            }
+        }
+
+        $info = Db::name('config')->where('inc_type',$type)->select();
+        if ($info){
+            foreach($info as $v){
+                $data[$v['name']] = $v['value'];
+            }
+            $this->assign('data',$data);
+        }
+        $this->assign('index',2);
+        return $this->fetch();
     }
     
     /**

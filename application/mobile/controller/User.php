@@ -25,6 +25,7 @@ use app\common\util\TpshopException;
 use app\common\model\UserWaitEarnings as Earnings;
 use think\Cache;
 use think\Page;
+use think\Request;
 use think\Verify;
 use think\Loader;
 use think\db;
@@ -143,6 +144,27 @@ class User extends MobileBase
 
         $money = $comm + $vip + $comm2;
         return $money;
+    }
+
+    //上传凭证
+    /**
+     * 上传支付凭证
+     * @param Request $request
+     * @return mixed
+     */
+    public function uploadfile(Request $request)
+    {
+        $pay_way = Db::name('config')->where('inc_type','pay_setting')->select();
+        $pay_way[0]['name'] = '支付宝';
+        $pay_way[1]['name'] = '微信';
+        $pay_way[0]['img'] = $pay_way[2]['value'];
+        $pay_way[1]['img'] = $pay_way[3]['value'];
+
+        $package = null;
+//        $package = Db::name('package')->order('pack_time asc')->select();
+        $this->assign('pay',$pay_way);
+        $this->assign('package',$package);//dump($package);die;
+        return $this->fetch();
     }
 
     //待收益
@@ -1311,26 +1333,26 @@ class User extends MobileBase
 //        $password = trim(I('post.password'));
         $mobile_code = trim(I('post.mobile_code'));
         //验证码验证
-        if (isset($_POST['verify_code'])) {
-            $verify_code = I('post.verify_code');
-            $verify = new Verify();
-            if (!$verify->check($verify_code, 'user_login')) {
-                $res = array('status' => 0, 'msg' => '验证码错误');
-                exit(json_encode($res));
-            }
-        }
-        if($mobile_code!='000000'){
-            // 验证码
-            //            $code=I('mobile_code');
-            $sms_type=I('sms_type');
-            $checkData['sms_type'] = $sms_type;
-            $checkData['code'] = $mobile_code;
-            $checkData['phone'] = $username;
-            $res = checkPhoneCode($checkData);
-            if ($res['code'] == 0) {
-                exit(json_encode(['status' => 0, 'msg' => $res['msg']]));
-            }
-        }
+//        if (isset($_POST['verify_code'])) {
+//            $verify_code = I('post.verify_code');
+//            $verify = new Verify();
+//            if (!$verify->check($verify_code, 'user_login')) {
+//                $res = array('status' => 0, 'msg' => '验证码错误');
+//                exit(json_encode($res));
+//            }
+//        }
+//        if($mobile_code!='000000'){
+//            // 验证码
+//            //            $code=I('mobile_code');
+//            $sms_type=I('sms_type');
+//            $checkData['sms_type'] = $sms_type;
+//            $checkData['code'] = $mobile_code;
+//            $checkData['phone'] = $username;
+//            $res = checkPhoneCode($checkData);
+//            if ($res['code'] == 0) {
+//                exit(json_encode(['status' => 0, 'msg' => $res['msg']]));
+//            }
+//        }
 
         $logic = new UsersLogic();
         $res = $logic->login($username, 1);
