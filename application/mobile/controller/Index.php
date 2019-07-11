@@ -54,7 +54,15 @@ class Index extends MobileBase {
             'is_on_sale' => 1,
             'virtual_indate' => ['exp', ' = 0 OR virtual_indate > ' . time()]
         ];
-        $favourite_goods = Db::name('goods')->where($where)->order('sort DESC')->page(1,C('PAGESIZE'))->cache(true,TPSHOP_CACHE_TIME)->select();//首页推荐商品
+        $favourite_goods = Db::name('goods')->where($where)->order('sort DESC')->page(1,C('PAGESIZE'))->cache(true,TPSHOP_CACHE_TIME)->select();
+        $field = "user_id, first_leader, level,parents_cache_vip,gift_pack_1,gift_pack_2,gift_pack_3,set_up_shop";
+        $UpInfo = M('users')->field($field)->where(['user_id' => $this->user_id])->find();
+        $level_bonus = $this->level_bonus($UpInfo['level']);
+        $type_data = $this->type_data($UpInfo['level']);
+        foreach($favourite_goods as $key=>$val){
+            $favourite_goods[$key]['vip_price'] = $val[$type_data];
+        }
+        //首页推荐商品
         $this->assign('favourite_goods',$favourite_goods);
          $res = Db::name('diy_ewei_shop')->where(['status' => 1])->find();
 
@@ -68,6 +76,27 @@ class Index extends MobileBase {
 
 		
 		
+    }
+
+    //获取等级比例
+    private function level_bonus($level){
+        $field = "level_name, level,ratio";
+        $agent_level = M('agent_level')->field($field)->select();
+        if($agent_level)
+        {
+            return $agent_level;
+        }
+    }
+
+    private function type_data($level){
+        $data = [
+            '1'=>'gold_card_price',
+            '2'=>'brick_card_price',
+            '3'=>'fine_brick_card_price'
+        ];
+        if(!empty($level)){
+            return $data[$level];
+        }
     }
     
     /**
