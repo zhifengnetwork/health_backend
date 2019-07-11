@@ -23,11 +23,9 @@ class Bonus extends MobileBase {
         $data = [
             'order_id'=>1,
             'goods_id'=>1,
-            'user_id' =>8852,
-            'shop_price'=>29800,
-            'gold_card_price'=>23280,
-            'brick_card_price'=>13980,
-            'fine_brick_card_price'=>9180,
+            'user_id' =>8836,
+            'money'=>29800,
+            'shop_price'=>39800,
             'nums'=>1
         ];
         //设置参数
@@ -38,13 +36,14 @@ class Bonus extends MobileBase {
     //设置参数
     private function setParams($data)
     {
-        $this->order_id                  = $data['order_id']; //订单id
-        $this->goods_id                  = $data['goods_id']; //商品id
-        $this->user_id                   = $data['user_id'];//用户id
-        $this->shop_price                = $data['shop_price']; //原价
-        $this->gold_card_price           = $data['gold_card_price'];//金卡会员价格
-        $this->brick_card_price          = $data['brick_card_price'];//钻石会员价格
-        $this->fine_brick_card_price     = $data['fine_brick_card_price'];//精钻会员价格
+        $this->order_id    = $data['order_id']; //订单id
+        $this->goods_id    = $data['goods_id']; //商品id
+        $this->user_id     = $data['user_id'];//用户id
+        $this->money       = $data['money']; //购买价格
+        $this->shop_price  = $data['shop_price']; //原价
+        // $this->gold_card_price           = $data['gold_card_price'];//金卡会员价格
+        // $this->brick_card_price          = $data['brick_card_price'];//钻石会员价格
+        // $this->fine_brick_card_price     = $data['fine_brick_card_price'];//精钻会员价格
         $this->nums                      = $data['nums'];//商品数量
         return true;
     } 
@@ -56,18 +55,91 @@ class Bonus extends MobileBase {
         $level = 0;
         foreach($users as $key => $vale)
         {
+            if($key<=0) continue;
+           
             if($vale['level']>=$level){
                 //二级返佣
-                dump('二级返佣');
-            }else{
-                //极差价
-                //二级返佣
-                dump('极差价,二级返佣');
+                $this->second_level($vale);                
+            }
+            //直推极差价
+            if($key==1){
+
+                if($vale['level']<1) continue;
+                $this->bonus_range($vale);
             }
             $level = $vale['level'];
+            
         }
         
     }
+    private function account_log($data){
+        $accountLogData = [
+            'user_id' => $this->user_id,
+            'user_money' => $data['money'],
+            'change_time' => time(),
+            'desc' => $data['desc'],
+            'type'=>$data['type'],
+            'order_id'=>$this->order_id,
+        ];
+        $afel = Db::name('account_log')->insert($accountLogData);
+        if($afel){
+            return $afel;
+        }
+    }
+    private function bonus_range($data){
+        //返佣金额
+        $money = $this->shop_price-$this->money;
+        if($money<=0) return false;
+        //操作用户余额
+        $user_bonus = $this->user_bonus($money,$data['user_id']);
+        if($user_bonus){
+            $account_log_arr = [
+                'money'=>$money,
+                'desc'=>"用户【'".$this->user_id."'】购买礼包上级【'".$data['user_id']."'】获得差价'".$money."'元",
+                'type'=>23
+            ];
+            $this->account_log($account_log_arr);
+            return $user_bonus;
+        }
+    }
+
+    //二级分佣
+    private function second_level($data){
+
+        $level_bonus = $this->level_bonus($data['level']);
+        //返佣金额
+        $money = $this->money*$level_bonus['ratio']/100;
+        //操作用户余额
+        $user_bonus = $this->user_bonus($money,$data['user_id']);
+        if($user_bonus){
+            $account_log_arr = [
+                'money'=>$money,
+                'desc'=>"用户【'".$this->user_id."'】购买礼包上级【'".$data['user_id']."'】获得返佣'".$money."'元",
+                'type'=>22
+            ];
+            $this->account_log($account_log_arr);
+            return $user_bonus;
+        }
+    }
+
+    //增加用户余额
+    private function user_bonus($money,$user_id){
+        $user_money_bonus = Db::name('users')->where(['user_id'=>$user_id])->setInc('user_money_bf',$money);
+        if($user_money_bonus){
+            return $user_money_bonus;
+        }
+    }
+
+    //获取等级比例
+    private function level_bonus($level){
+        $field = "level_name, level,ratio";
+        $agent_level = M('agent_level')->field($field)->where(['level' => $level])->find();
+        if($agent_level)
+        {
+            return $agent_level;
+        }
+    }
+
     public function reward_leve($user_id,$num = 0,&$userList = array()){
 
 		$num += 1;
@@ -76,7 +148,7 @@ class Bonus extends MobileBase {
         
 		$first_leader = $UpInfo['first_leader'];
 		
-		if($first_leader <= 0 || $num > 2){
+		if($first_leader < 0 || $num > 3){
 			return true;
         }
         if ($UpInfo)  //有上级
