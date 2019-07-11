@@ -529,6 +529,20 @@
             </dl>
             <dl class="row">
                 <dt class="tit">
+                    <label>是否为会员卡</label>
+                </dt>
+                <dd class="opt">
+                    <div class="onoff">
+                        <label for="member_card1" class="cb-enable <if condition="$goods['member_card'] eq 1">selected</if>"><span>是</span></label>
+                        <label for="member_card2" class="cb-disable <if condition="$goods['member_card'] eq 0">selected</if>"><span>否</span></label>
+                        <input id="member_card1" name="member_card" value="1" type="radio" <if condition="$goods['member_card'] eq 1">checked</if>>
+                        <input id="member_card2" name="member_card" value="0" type="radio" <if condition="$goods['member_card'] eq 0">checked</if>>
+                    </div>
+                    <p class="notic">选是，表示该商品为1000元会员卡</p>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="tit">
                     <label>确认收货后返佣</label>
                 </dt>
                 <dd class="opt">

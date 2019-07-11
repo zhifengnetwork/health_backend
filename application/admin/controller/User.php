@@ -1478,6 +1478,12 @@ class User extends Base
         }
     }
 
+    public function user_card(){
+
+    }
+
+
+
     /**
      * 会员批量充值
      */
