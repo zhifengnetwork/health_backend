@@ -78,6 +78,29 @@ function get_parents_vip_ids($user_id){
     
     return $parent_ids;
 }
+//获取推荐上级
+function get_uper_user($data)
+{
+    $recUser = getAllUp($data);
+    return array('recUser' => $recUser);
+}
+
+/*
+ * 获取所有上级
+ */
+function getAllUp($invite_id, &$userList = array())
+{
+    $field = "user_id, first_leader, level,parents_cache_vip,gift_pack_1,gift_pack_2,gift_pack_3,set_up_shop";
+    $UpInfo = M('users')->field($field)->where(['user_id' => $invite_id])->find();
+    if ($UpInfo)  //有上级
+    {
+        $userList[] = $UpInfo;
+        getAllUp($UpInfo['first_leader'], $userList);
+    }
+
+    return $userList;
+
+}
 
 //获取所有下级id
 function get_all_lower($user_id){
