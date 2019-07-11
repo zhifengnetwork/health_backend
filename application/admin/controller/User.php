@@ -1461,4 +1461,196 @@ class User extends Base
         }
         $this->ajaxReturn($return);
     }
+
+    /**
+     * 获取用户昵称
+     */
+    public function get_user()
+    {
+        $id = I('id');
+        $nickname = M('users')->where('user_id', $id)->value('nickname');
+        if($nickname){
+            $this->ajaxReturn(['status'=>1, 'msg'=>'获取成功', 'result'=>$nickname]);
+            exit;
+        }else{
+            $this->ajaxReturn(['status'=>0, 'msg'=>'获取失败', 'result'=>'']);
+            exit;
+        }
+    }
+
+    public function user_card(){
+
+    }
+
+
+
+    /**
+     * 会员批量充值
+     */
+    public function recharge_batch()
+    {
+        $desc  = I('desc/s');
+        if(!$desc){
+            $this->ajaxReturn(['status' => 0, 'msg'=>'描述不能为空!']);
+            exit;
+        }
+        $money = I('money/s');
+        if(!$money){
+            $this->ajaxReturn(['status' => 0, 'msg'=>'金额不能为空!']);
+            exit;
+        }
+
+        $user_ids   = M('recharge_user')->where('status', 1)->column('user_id');
+
+        $data = M('users')->whereIn('user_id', $user_ids)->column('user_id, nickname, user_money');
+
+        Db::startTrans();
+        $total = count($user_ids);
+        $pre_time = time();
+        $log_arr  = array();
+        try{
+            foreach ($user_ids as $key => $value) {
+                $log_arr[$key]['user_id'] = $value;
+                $log_arr[$key]['account'] = $money;
+                $log_arr[$key]['ctime'] = $pre_time;
+                $log_arr[$key]['total'] = $total;
+                $log_arr[$key]['desc'] = $desc;
+                $log_arr[$key]['pay_status'] = 1;
+                $log_arr[$key]['nickname'] = $data[$value]['nickname'];
+
+                $acc_arr[$key]['user_id'] = $value;
+                $acc_arr[$key]['order_id'] = 0;
+                $acc_arr[$key]['user_money'] = $money;
+                $acc_arr[$key]['change_time'] = $pre_time;
+                $acc_arr[$key]['desc'] = $desc;
+
+                $total_money = round($data[$value]['user_money'] + $money, 2);
+
+                Db::name('users')->where('user_id', $value)->update(['user_money'=>$total_money]);
+            }
+
+            Db::name('account_log')->insertAll($acc_arr);
+            Db::name('recharge_log')->insertAll($log_arr);
+            Db::commit();
+            $this->ajaxReturn(['status' => 1, 'msg'=>'成功充值' . $total . '人!']);
+            exit;
+        } catch (\Exception $e) {
+            Db::rollback();
+            $this->ajaxReturn(['status' => 0, 'msg'=>'充值失败!']);
+            exit;
+        }
+    }
+
+    /**
+     * 添加批量充值会员
+     */
+    public function recharge_user_add()
+    {
+        if(IS_POST){
+            $data = I('post.');
+            $data = array_filter($data['data']);
+            if(!$data){
+                $this->ajaxReturn(['status'=>0, 'msg'=>'数据不能为空，请填写数据！']);
+                exit;
+            }
+
+            $pre_time = time();
+            $all_data = array();
+            Db::startTrans();
+            try{
+                foreach ($data as $key => $value) {
+                    $is_exisit = M('recharge_user')->where('user_id', $value)->find();
+                    if(!$is_exisit){
+                        $all_data['user_id'] = $value;
+                        $all_data['ctime']   = $pre_time;
+                        $all_data['status']  = 1;
+                        Db::name('recharge_user')->insert($all_data);
+                    }else{
+                        $this->ajaxReturn(['status' => 0, 'msg'=>'用户ID' . $value . '已存在!']);
+                        exit;
+                    }
+                }
+                Db::commit();
+                $this->ajaxReturn(['status'=>1, 'msg'=>'添加成功!']);
+                exit;
+            } catch (\Exception $e) {
+                Db::rollback();
+                $this->ajaxReturn(['status' => 0, 'msg'=>'添加失败!']);
+                exit;
+            }
+        }
+
+        return $this->fetch();
+    }
+
+    /**
+     * 充值会员列表
+     */
+    public function recharge_user_list()
+    {
+        $map = array();
+        $search_type  = I('search_type');
+        $search_value = I('search_value');
+        if ($search_value) {
+            if($search_type == 'user_id'){
+                $map['r.user_id'] = $search_value;
+            }else{
+                $map['u.nickname'] = array('like', "%$search_value%");
+            }
+            $this->assign('search_value', $search_value);
+        }
+
+        $count = M('recharge_user')->alias('r')
+            ->join('users u', 'u.user_id = r.user_id', 'LEFT')
+            ->where($map)
+            ->count();
+        $page  = new Page($count, 20);
+        $list  = M('recharge_user')->alias('r')
+            ->join('users u', 'u.user_id = r.user_id', 'LEFT')
+            ->where($map)
+            ->limit($page->firstRow, $page->listRows)
+            ->field('r.*, u.nickname')
+            ->order('id DESC')
+            ->select();
+
+        $this->assign('search_type', $search_type);
+        $this->assign('list', $list);
+        $this->assign('page', $page);
+        return $this->fetch();
+    }
+
+    /**
+     * 批量充值列表
+     */
+    public function recharge_user_log()
+    {
+        $timegap = urldecode(I('timegap'));
+        $search_type  = I('search_type');
+        $search_value = I('search_value');
+        $map = array();
+        if ($timegap) {
+            $gap = explode(',', $timegap);
+            $begin = $gap[0];
+            $end = $gap[1];
+            $map['ctime'] = array('between', array(strtotime($begin), strtotime($end)));
+            $this->assign('begin', $begin);
+            $this->assign('end', $end);
+        }
+        if ($search_value) {
+            if($search_type == 'user_id'){
+                $map['user_id'] = $search_value;
+            }else{
+                $map['nickname'] = array('like', "%$search_value%");
+            }
+            $this->assign('search_value', $search_value);
+        }
+        $count = M('recharge_log')->where($map)->count();
+        $Page = new Page($count, 20);
+        $list = M('recharge_log')->where($map)->limit($Page->firstRow, $Page->listRows)
+            ->order('id DESC')->select();
+        $this->assign('search_type', $search_type);
+        $this->assign('list', $list);
+        $this->assign('pager', $Page);
+        return $this->fetch();
+    }
 }

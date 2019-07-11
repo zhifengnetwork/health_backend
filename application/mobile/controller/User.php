@@ -146,6 +146,34 @@ class User extends MobileBase
         return $money;
     }
 
+    /**
+     * 生成会员卡信息
+     * @param $user_id
+     * @return int 1 表示成功 ； 0 表示失败
+     */
+    public static function info($user_id){
+        $company_name = '健康商城';
+        $image = '';//图片路径
+        $card_no = 'JKSC'.time().$user_id;
+        $photoshop = new Photoshop();
+        $path = $photoshop->getPosterPhoto($user_id,$card_no);
+        $data = [
+            'user_id'=>$user_id,
+            'card_no'=>$card_no,
+            'card_image'=>$path,
+            'use_count'=>0,
+            'total_count'=>0,
+            'not_use_count'=>0,
+            'create_time'=>time(),
+        ];
+
+        $result = Db::name('user_card')->insert($data);
+        if($result){
+            return 1;
+        }
+        return 0;
+    }
+
     //上传凭证
     /**
      * 上传支付凭证
