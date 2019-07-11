@@ -20,6 +20,8 @@ use app\admin\logic\GoodsLogic;
 use app\common\model\Goods;
 
 class Ad extends Base{
+
+
     public function ad(){       
         $act = I('get.act','add');
         $ad_id = I('get.ad_id/d');
@@ -81,7 +83,7 @@ class Ad extends Base{
         	}
         }
                                      
-        $ad_position_list = M('AdPosition')->getField("position_id,position_name,is_open");                        
+        $ad_position_list = Db::name('ad_position')->where(['ad_type'=>1])->getField("position_id,position_name,is_open");
         $this->assign('ad_position_list',$ad_position_list);//广告位 
         $show = $Page->show();// 分页显示输出
         $this->assign('list',$list);// 赋值数据集
@@ -93,6 +95,83 @@ class Ad extends Base{
        
         
         return $this->fetch();
+    }
+
+    /**
+     * 新增按钮
+     * @return mixed
+     */
+    public function adButton(){
+        $act = I('get.act','add');
+        $ad_id = I('get.ad_id/d');
+
+        $ad_info = array();
+        if($ad_id){
+            $ad_info = D('ad_position_button')->where('position_id',$ad_id)->find();
+        }
+
+        $position = D('ad_position_button')->select();
+        $this->assign('info',$ad_info);
+        $this->assign('act',$act);
+        $this->assign('position',$position);
+        return $this->fetch();
+    }
+
+    /**
+     * 按钮列表
+     * @return mixed
+     */
+    public function buttonList(){
+        $where = null;
+        $button = M('ad_position_button');
+        $count = $button->where($where)->count();// 查询满足要求的总记录数
+        $Page = $pager = new Page($count,10);// 实例化分页类 传入总记录数和每页显示的记录数
+        $res = $button->where($where)->order('position_id desc')->limit($Page->firstRow.','.$Page->listRows)->select();
+//        print_r($res);die;
+        $show = $Page->show();// 分页显示输出
+        $this->assign('list',$res);// 赋值数据集
+        $this->assign('page',$show);// 赋值分页输出
+        $this->assign('pager',$pager);
+
+        //判断API模块存在
+        if(is_dir(APP_PATH."/api")) $this->assign('is_exists_api',1);
+
+
+        return $this->fetch();
+    }
+
+    public function adHandleButton(){
+        $data = I('post.');
+        if($data['act'] != 'del'){
+            if($data['ad_name']=='' || $data['ad_link']=='' || $data['ad_code'] == ''){
+                $this->error("名称或者链接或者图片不能为空");
+            }
+        }
+        $data['position_name'] = $data['ad_name'];
+        if($data['act'] == 'add'){
+            $r = D('ad_position_button')->add($data);
+        }
+        if($data['act'] == 'edit'){
+            $r = D('ad_position_button')->where('position_id', $data['ad_id'])->save($data);
+        }
+
+        if($data['act'] == 'del'){
+            $r = D('ad_position_button')->where('position_id', $data['del_id'])->delete();
+            if($r){
+                $this->ajaxReturn(['status'=>1,'msg'=>"操作成功",'url'=>U('Admin/Ad/buttonList')]);
+            }else{
+                $this->ajaxReturn(['status'=>-1,'msg'=>"操作失败"]);
+            }
+        }
+        $referurl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : U('Admin/Ad/buttonList');
+        // 不管是添加还是修改广告 都清除一下缓存
+        delFile(RUNTIME_PATH.'html'); // 先清除缓存, 否则不好预览
+        clearCache();
+        if($r){
+            $this->success("操作成功",U('Admin/Ad/buttonList'));
+        }else{
+            $this->error("操作失败",$referurl);
+        }
     }
     
     public function position(){
