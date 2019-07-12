@@ -189,10 +189,10 @@ class PlaceOrder
     public function check()
     {
 
-        $health = $this->health_pay(input('request.'));
-        if(empty($health)){
-            throw new TpshopException('提交订单', 0, ['status' => 0, 'msg' => '用户余额不足，请先充值', 'result' => '']);
-        }
+//        $health = $this->health_pay(input('request.'));
+//        if(empty($health)){
+//            throw new TpshopException('提交订单', 0, ['status' => 0, 'msg' => '用户余额不足，请先充值', 'result' => '']);
+//        }
         $shop = $this->pay->getShop();
         if($shop['shop_id'] > 0){
             if($this->take_time <= time()){

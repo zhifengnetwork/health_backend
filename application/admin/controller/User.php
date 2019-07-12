@@ -1542,6 +1542,167 @@ class User extends Base
     }
 
     /**
+     * 体验类型
+     * @return array
+     */
+    public static function feel_type(){
+        return [
+            1=> array('count'=>5,'name'=>'5次体验/2小时'),
+            2=> array('count'=>10,'name'=>'10次体验/1小时'),
+        ];
+    }
+
+    /**
+     * 会员批量充值/使用次数
+     */
+    public function feel_batch()
+    {
+        $desc  = I('desc/s');
+        if(!$desc){
+            $this->ajaxReturn(['status' => 0, 'msg'=>'描述不能为空!']);
+            exit;
+        }
+        $status = I('status/s');
+        if(!$status){
+            $this->ajaxReturn(['status' => 0, 'msg'=>'体验类型不能为空!']);
+            exit;
+        }
+        $type = I('type/s');//1 表示充值；2 表示使用
+        $account = 0;
+        if($type == 2){
+            $account = I('account/s');
+        }
+
+
+        $user_ids   = M('user_card')->where('status', 1)->column('user_id');
+        $data = M('users')->whereIn('user_id', $user_ids)->column('user_id, nickname, user_money');
+
+        Db::startTrans();
+        $total = count($user_ids);
+        $pre_time = time();
+        $log_arr  = array();
+        try{
+            foreach ($user_ids as $key => $value) {
+                $user_card = Db::name('user_card')->where(['user_id'=>$value])->find();
+                $log_arr[$key]['user_id'] = $value;
+                $log_arr[$key]['card_no'] = $user_card['card_no'];
+                $log_arr[$key]['type'] = $status;
+                if($type == 1){//表示充值
+                    if($status == 1){
+                        $log_arr[$key]['use_count_1'] = 5;
+                        $total_count = $user_card['total_count_1'] + 5;
+                        Db::name('user_card')->where('user_id', $value)->update(['total_count_1'=>$total_count]);
+                    }else{
+                        $log_arr[$key]['use_count_2'] = 10;
+                        $total_count = $user_card['total_count_2'] + 10;
+                        Db::name('user_card')->where('user_id', $value)->update(['total_count_2'=>$total_count]);
+                    }
+                }else{//表示使用
+                    if($status == 1){
+                        $log_arr[$key]['use_count_1'] = $account;
+                        $log_arr[$key]['status'] = 1;
+                        $total_count = $user_card['total_count_1'] - $account;
+                        if($total_count < 0){
+                            Db::rollback();
+                            $this->ajaxReturn(['status' => 0, 'msg'=>'使用次数已超过可以处理失败!']);
+                        }
+                        Db::name('user_card')->where('user_id', $value)->update(['total_count_1'=>$total_count]);
+                    }else{
+                        $log_arr[$key]['status'] = 2;
+                        $total_count = $user_card['total_count_2']  - $account;
+                        if($total_count < 0){
+                            Db::rollback();
+                            $this->ajaxReturn(['status' => 0, 'msg'=>'使用次数已超过可以处理失败!']);
+                        }
+                        Db::name('user_card')->where('user_id', $value)->update(['total_count_2'=>$total_count]);
+                    }
+                }
+
+                $log_arr[$key]['create_time'] = time();
+                $log_arr[$key]['desc'] = $desc;
+            }
+
+            Db::name('user_card_log')->insertAll($log_arr);
+            Db::commit();
+            $this->ajaxReturn(['status' => 1, 'msg'=>'处理成功' . $total . '人!']);
+            exit;
+        } catch (\Exception $e) {
+            Db::rollback();
+            $this->ajaxReturn(['status' => 0, 'msg'=>'充值失败!']);
+            exit;
+        }
+    }
+
+
+    /**
+     * 会员卡体验列表
+     */
+    public function feel_list(){
+        $map = array();
+        $search_type  = I('search_type');
+        $search_value = I('search_value');
+        if ($search_value) {
+            if($search_type == 'user_id'){
+                $map['r.user_id'] = $search_value;
+            }else{
+                $map['u.nickname'] = array('like', "%$search_value%");
+            }
+            $this->assign('search_value', $search_value);
+        }
+
+        $count = M('user_card')->alias('r')
+            ->join('users u', 'u.user_id = r.user_id', 'LEFT')
+            ->where($map)
+            ->count();
+        $page  = new Page($count, 20);
+        $list  = M('user_card')->alias('r')
+            ->join('users u', 'u.user_id = r.user_id', 'LEFT')
+            ->where($map)
+            ->limit($page->firstRow, $page->listRows)
+            ->field('r.*, u.nickname')
+            ->order('id DESC')
+            ->select();
+
+        $this->assign('search_type', $search_type);
+        $this->assign('list', $list);
+        $this->assign('page', $page);
+        return $this->fetch();
+    }
+
+    /**
+     * 批量会员卡体验列表
+     */
+    public function feel_list_log()
+    {
+        $timegap = urldecode(I('timegap'));
+        $search_type  = I('search_type');
+        $search_value = I('search_value');
+        $map = array();
+        if ($timegap) {
+            $gap = explode(',', $timegap);
+            $begin = $gap[0];
+            $end = $gap[1];
+            $map['ctime'] = array('between', array(strtotime($begin), strtotime($end)));
+            $this->assign('begin', $begin);
+            $this->assign('end', $end);
+        }
+        if ($search_value) {
+            if($search_type == 'user_id'){
+                $map['user_id'] = $search_value;
+            }
+            $this->assign('search_value', $search_value);
+        }
+        $count = M('user_card_log')->where($map)->count();
+        $Page = new Page($count, 20);
+        $list = M('user_card_log')->where($map)->limit($Page->firstRow, $Page->listRows)
+            ->order('id DESC')->select();
+        $this->assign('search_type', $search_type);
+        $this->assign('list', $list);
+        $this->assign('pager', $Page);
+        return $this->fetch();
+    }
+
+    /**
      * 添加批量充值会员
      */
     public function recharge_user_add()

@@ -176,6 +176,7 @@ return	array(
 			array('name'=>'会员列表','act'=>'index','op'=>'User'),
 			array('name'=>'会员统计','act'=>'level_count','op'=>'User'),
 			array('name' => '批量充值', 'act' => 'recharge_user_add', 'op' => 'User'),
+			array('name' => '会员卡体验', 'act' => 'feel_list', 'op' => 'User'),
 			// array('name'=>'会员等级','act'=>'levelList','op'=>'User'),
 		)),
 		array('name' => '充值提现','child'=>array(
