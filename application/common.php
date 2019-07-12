@@ -1998,7 +1998,7 @@ function getPhoneCode($data)
         return array('code' => 0, 'msg' => '获取验证码过于频繁，请稍后再试');
     }
     $code = rand(123456, 999999);
-    $tpl = '【壹圆集】您的手机验证码：' . $code . ' 若非您本人操作，请忽略本短信。';
+    $tpl = '【健康商城】您的手机验证码：' . $code . ' 若非您本人操作，请忽略本短信。';
     // $content=str_replace('{$code}',$code,$tpl);
     $content = $tpl;
     $result = sendSms($data['phone'], $content);
@@ -2173,5 +2173,21 @@ function setBalanceLog($user_id,$type=0,$change_money=0,$balance=0,$desc='',$ord
         return 1;
     }else{
         return 0;
+    }
+}
+
+/**
+ * 根据不同的会员等级获取价格
+ * @param $level
+ * @return mixed
+ */
+function price_type_data($level){
+    $data = [
+        '1'=>'gold_card_price',
+        '2'=>'brick_card_price',
+        '3'=>'fine_brick_card_price'
+    ];
+    if(!empty($level)){
+        return $data[$level];
     }
 }

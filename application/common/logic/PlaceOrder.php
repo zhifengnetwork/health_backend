@@ -155,11 +155,44 @@ class PlaceOrder
     }
 
     /**
+     *  健康商城支付
+     * @param $request
+     * @return int
+     */
+    public function health_pay($request){
+        //修改为余额支付
+        //获取商品的具体价格
+        $goods_id = $request["goods_id"]; // 商品id
+        $goods_num = $request["goods_num"]; // 商品数量
+        $goods = Db::name('goods')->where(['goods_id'=>$goods_id])->find();
+        $user = session('user');
+        $goods_price = 0;
+        if($goods['is_gift_pack'] == 1){
+            //获取要付款的价格
+            $type = price_type_data($user['level']);
+            $goods_price = $goods[$type];
+        }else{
+            $goods_price = $goods['shop_price'];
+        }
+        $user_money = $user['user_money'];
+        //判断用户的余额是否足够支付
+        $left_money = bcsub($user_money,bcmul($goods_num,$goods_price,2),2);
+        if($left_money < 0){
+            return 0;
+        }
+        return 1;
+    }
+    /**
      * 提交订单前检查
      * @throws TpshopException
      */
     public function check()
     {
+
+        $health = $this->health_pay(input('request.'));
+        if(empty($health)){
+            throw new TpshopException('提交订单', 0, ['status' => 0, 'msg' => '用户余额不足，请先充值', 'result' => '']);
+        }
         $shop = $this->pay->getShop();
         if($shop['shop_id'] > 0){
             if($this->take_time <= time()){
