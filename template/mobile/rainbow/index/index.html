@@ -4,564 +4,469 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>首页-{$tpshop_config['shop_info_store_title']}</title>
-		<link rel="stylesheet" href="__STATIC__/css/style.css">
-		<link rel="stylesheet" type="text/css" href="__STATIC__/css/iconfont.css" />
-		<!--<link rel="stylesheet" href="__STATIC__/css/bottom_nav.css" />-->
+
 		<script src="__STATIC__/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
-		<!--<script src="__STATIC__/js/zepto-1.2.0-min.js" type="text/javascript" charset="utf-8"></script>-->
 		<script src="__STATIC__/js/mobile-util.js" type="text/javascript" charset="utf-8"></script>
 		<script src="__STATIC__/js/swipeSlide.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="__PUBLIC__/js/global.js"></script>
 		<script src="__STATIC__/js/layer.js" type="text/javascript"></script>
-		<link rel="shortcut icon" type="image/x-icon" href="{$tpshop_config.shop_info_store_ico|default='/public/static/images/logo/storeico_default.png'}" media="screen" />
+		<!--<link rel="shortcut icon" type="image/x-icon" href="{$tpshop_config.shop_info_store_ico|default='/public/static/images/logo/storeico_default.png'}" media="screen" />-->
+
+		<script src="__STATIC__/js/rem.js"></script>
+		<link rel="stylesheet" href="__STATIC__/css/reset.css">
+		<link rel="stylesheet" href="__STATIC__/css/swiper.min.css">
+		<link rel="stylesheet" href="__STATIC__/css/base.css">
+
 		<style>
-			
-			.header .sea-box span {
-				margin-left: 1rem!important;
-			}
-			
-			.header {
-				width: 16rem;
-				position: fixed;
-				left: 50%;
-				top: 0;
-				margin-left: -8rem;
-				z-index: 999;
-				height: 1.87733rem;
-				/*background:-webkit-linear-gradient(rgba(0,0,0,0.3),rgba(255,255,255,0));
-	              background:linear-gradient(rgba(0,0,0,0.3),rgba(255,255,255,0));*/
-				-webkit-transition: -webkit-transform 3s, opacity 4s, background 10s;
-				/* background: ; */
-			}
-			
-			@media screen and (min-width:1300px) {
-				.header {
-					height: .93867rem
-				}
-			}
-			
-			.header .content {
-				padding-top: .29867rem;
-				margin: 0;
-			}
-			
-			@media screen and (min-width:1300px) {
-				.header .content {
-					padding-top: .128rem
-				}
-			}
-			
-			.header .logo {
-				float: left;
-				width: 1.024rem;
-				height: 1.024rem;
-				margin: .106667rem .384rem;
-				border-radius: 50%;
-				overflow: hidden;
-			}
-			
-			.header .logo img {
-				width: 100%
-			}
-			
-			@media screen and (min-width:1300px) {
-				.header .logo {
-					width: .64rem;
-					height: .64rem;
-					margin: 0 .384rem;
-				}
-			}
-			
-			.header .sea-box {
-				width: 12.8rem;
-				height: 1.23733rem;
-				background: #f8f8f8;
-				position: relative;
-				margin: 0 .512rem;
-				border-radius: .618667rem;
-				overflow: hidden;
-			}
-			
-			@media screen and (min-width:1300px) {
-				.header .sea-box {
-					height: .64rem;
-					width: 12.8rem;
-				}
-			}
-			
-			.header .sea-box span {
-				background-image: url("__STATIC__/images/search.png");
-				background-repeat: no-repeat;
-				background-size: cover;
-				height: .64rem;
-				width: .64rem;
-				float: left;
-				margin: .298667rem 0;
-			}
-			
-			#search_text {
-				outline: none;
-				border: none;
-				margin-top: .33rem;
-				font-size: .5rem;
-				margin-left: .5rem;
-				background: #f8f8f8
-			}
-			
-			.nav {
-				
-				/* margin-top: .9rem; */
-				display: flex;
+			.search {
+				width: 7.02rem;
+				height: .5rem;
+				border-radius: .2rem;
 				display: -webkit-box;
-				display: -webkit-flex;
 				display: -ms-flexbox;
-				justify-content: space-around;
+				display: flex;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				margin: .1rem auto .2rem;
+				border: .01rem solid #6a6a6a;
+				padding: 0 .18rem;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
 			}
-			
-			.nav span {
-				/*border: 1px solid green;*/
-				-webkit-box-flex: 1;
-				-webkit-flex: 1;
-				-ms-flex: 1;
-				flex: 1;
-				text-align: center;
-				padding: .8rem 0;
+
+			.search .search-icon {
+				width: .2rem;
+				height: .2rem;
+				background: url(__STATIC__/images/home/search-icon.png) no-repeat;
+				background-size: 100%;
+				margin-right: .1rem;
 			}
-			
-			.nav span img {
-				width: 1.6rem;
+
+			.search .text {
+				color: #a7a7a7;
+				font-size: .2rem;
 			}
-			
-			.nav span p {
-				margin-top: .3rem;
-				font-size: .5rem;
-			}
-			
-			.pic_box {
-				width: 90%;
-				/* height: 3.8rem; */
-				margin-left: 5%;
-				background-size: 100%
-			}
-			
-			.store_ear {
+
+			/* 轮播图 */
+			.banner {
+				width: 6.6rem;
+				height: 3.2rem;
+				border-radius: .1rem;
+				box-shadow: 0 0 8px #ccc;
+				margin: 0 auto;
 				position: relative;
-				width: 90%;
-				height: 280px;
-				margin-left: 5%;
-				margin-top: 1rem;
-				margin-bottom: 1rem;
-				background: white;
-				/*border: 1px solid green;*/
 			}
-			
-			.good {
-				position: absolute;
-				left: 0;
-				top: 0;
-				width: 40%;
-				height: 100%;
-			}
-			
-			.right_text {
-				position: absolute;
-				left: 43%;
-				width: 53%;
-				height: 280px;
-				display: inline-block;
-				/*border: 1px solid blue;*/
-			}
-			
-			.bottom_text {
-				position: absolute;
-				bottom: 0px;
-				/*border: 1px solid red;*/
+
+			.banner img {
 				width: 100%;
 			}
-			
-			.top_text {
+
+			.banner .swiper-pagination {
+				bottom: .1rem;
+			}
+
+			.banner .swiper-pagination-bullet {
+				opacity: .5;
+				background: #000;
+			}
+
+			.banner .swiper-pagination-bullet-active {
+				opacity: 1;
+				background: #f59962;
+			}
+
+			/* 菜单导航 */
+			.nav-wrap {
+				display: -webkit-box;
+				display: -moz-flex;
+				display: -ms-flexbox;
+				display: flex;
+				-ms-flex-flow: wrap;
+				flex-flow: wrap;
+				padding: 0 0.24rem;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+				margin: .2rem auto;
+			}
+
+			.nav-wrap .nav-item {
+				width: 25%;
+				text-align: center;
+				font-size: .24rem;
+				margin-bottom: .1rem;
+			}
+
+			.nav-wrap .nav-item a {
+				color: #494949;
+			}
+
+			.nav-wrap .nav-item span.icon {
+				width: .88rem;
+				height: .88rem;
+				margin: 0 auto .16rem;
+				display: block;
+				background-color: #0f75f3;
+				border-radius: 50%;
+			}
+
+			.nav-wrap .nav-item span img {
+				width: 100%;
+			}
+
+			/* 抢购会员卡 */
+			.rush-vip {
+				width: 7.02rem;
+				height: 2.6rem;
+				background: url(__STATIC__/images/home/rush-vip-bg.png) no-repeat;
+				background-size: 100%;
+				margin: 0 auto;
+				position: relative;
+			}
+
+			.rush-vip .heading {
+				height: .88rem;
+				line-height: .88rem;
+				font-size: .3rem;
+				text-align: center;
+			}
+
+			.rush-vip .vip-container {
+				height: 1.72rem;
+				font-size: .3rem;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				-ms-flex-direction: column;
+				flex-direction: column;
+			}
+
+			.rush-vip .buy-btn {
+				font-size: .26rem;
+				color: #151515;
 				position: absolute;
-				top: 0px;
+				right: .2rem;
+				bottom: .2rem;
 			}
-			
-			.old_buy {
-				color: red;
-				font-size: .47rem;
-				background: rgba(204, 0, 1, 0.2);
+
+			/* 首页公共标题 */
+			.headline {
+				height: .9rem;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				padding: 0 .24rem;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+
+			.headline .icon {
+				width: .36rem;
+				height: .36rem;
 				display: inline-block;
+				margin-right: .14rem;
 			}
-			
-			.money {
-				font-size: .8rem;
-				color: red;
-			}
-			
-			.mianfei {
-				color: gray;
-				font-size: .5rem;
-				padding-left: .4rem;
-			}
-			
-			#bottomNavWrap {
-				position: fixed;
-				bottom: 0px;
-			}
-			
-			.top_text span {
-				font-size: .5rem;
-			}
-			/* banner ban1 */
-			.banner{
-				
-				padding-top:2.1rem;
-			}
-			
-			.guesslike ul li .similer-product img {
-				width: 100%!important;
-				
-                }
-            .layermmain{
-            	
-            	background: white;
-            	opacity: 1;
-            	z-index: 1;
-            	
-            }
-              .guanzhu{
-                	
-                	width: .6rem;
-                	height: 4rem;  
-                	text-align: center;           	
-                	position: fixed;
-                	right: 0;
-                	top: 0;
-                	bottom:0;
-                	margin: auto 0;
-                	font-size: .5rem;
-                	background: #CCC;
-                	display: flex;
-                	align-items: center;
-                	background: #37afe6;
-                	color: white;
-                }
-                .erweima{
-                	width: 8rem;
-                	height: 8rem;
-                	
-                }
-                .layermmain .section{
-                	opacity: 1;
-				}
-				.tututututu{
 
-						position: relative;
-						overflow: hidden;
-						height: 1.5rem;
+			.headline .icon img {
+				width: 100%;
+			}
 
-				}
-				marquee{
-				  
-				  
-				  position: absolute;
-				  left: 2.8rem;
-				  font-size: .5rem;
-				  height: 1.5rem;
-				  line-height: 1.75rem;
-				  /* top: 0rem;
-				  right: 2.8rem;
-				  left: 2.8rem;
-				  background: #f7f7f7;
-				  /* color: white */
-				  /* border: 1px solid green;  */
-				  /* overflow: hidden; */
-				
-				}
-				.tubiao{
+			.headline h3 {
+				font-size: .36rem;
+			}
 
-				
-				  background: #f7f7f7;
-				  height: 1.5rem;
-				
-				}
-				.tubiao img{
-					width: .8rem;
-					height: 1rem;
-					margin-left: .3rem;
-					margin-top: .1rem
-				}
-                .tubiao span{
-					 
-					 display: inline-block;
-					 height: 100%;
-					 line-height: 1.72rem;
-					 font-size: .5rem;
-					 margin-left:.2rem;
-					 vertical-align: center; 
-				
+			/* 超值大礼包 */
+			.gift-area .gift-list {
+				padding: .2rem 0;
+			}
 
-				}
-                
+			.gift-list .swiper-slide {
+				width: 65%;
+			}
+
+			.gift-area .gift-list .single-item .top {
+				overflow: hidden;
+				padding: .1rem;
+				box-sizing: border-box;
+				background-color: #fff;
+				box-shadow: 0 0 .08rem #999;
+				border-radius: .1rem;
+			}
+
+			.gift-area .gift-list .single-item .img-wrap {
+				width: 98%;
+				height: 3.6rem;
+				overflow: hidden;
+				background: #efefef;
+				margin: 0 auto;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+			}
+
+			.gift-area .gift-list .single-item .img-wrap img {
+				max-width: 100%;
+				width: 2.8rem;
+			}
+
+			.gift-area .gift-list .single-item .main {
+				width: 100%;
+				height: 3.1rem;
+				padding: .1rem;
+				box-sizing: border-box;
+			}
+
+			.gift-area .gift-list .single-item .main .goods-name {
+				line-height: .6rem;
+				color: #151515;
+				font-size: .28rem;
+				text-align: center;
+			}
+
+			.gift-area .gift-list .single-item .main .price {
+				font-size: .24rem;
+				line-height: .4rem;
+				text-align: center;
+			}
+
+			.gift-area .gift-list .single-item .main .dec {
+				line-height: .34rem;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+			}
+
+			.gift-area .gift-list .single-item .main .see-btn {
+				width: 1.1rem;
+				height: .36rem;
+				border: .01rem solid #7d7d7d;
+				border-radius: .08rem;
+				text-align: center;
+				line-height: .36rem;
+				margin: .1rem auto;
+				color: #151515;
+			}
+
+			.gift-area .gift-list .single-item .buy-btn {
+				width: 2.98rem;
+				height: .6rem;
+				text-align: center;
+				line-height: .6rem;
+				background-color: #ff0000;
+				border-radius: .25rem;
+				color: #ffffff;
+				margin: .15rem auto;
+			}
 		</style>
 	</head>
 
 	<body>
-		<!--顶部搜索栏-s-->
-		<div class="header">
-			<div class="content">
-				<div class="ds-in-bl search">
-					<div class="sea-box">
-						<!--<div class="logo">
-                        <a href=""><img src="{$tpshop_config.shop_info_wap_home_logo|default='/public/static/images/logo/wap_home_logo_default.png'}" alt="LOGO"></a>
-                    </div>-->
-						<span></span>
-						<form action="" method="post">
-							<div class="sear-input">
-								<a href="{:U('Goods/ajaxSearch')}">
-									<input type="text" name="q" id="search_text" class="search_text" value="" placeholder="请输入您所搜索的商品">
-								</a>
+	<div class="wrapper">
+		<!-- 搜索 -->
+		<div class="search">
+			<span class="search-icon"></span>
+			<span class="text">搜索</span>
+		</div>
+
+		<!-- 轮播图 -->
+		<div class="swiper-container banner">
+			<div class="swiper-wrapper">
+
+				<php>foreach($adList as $k=>$v){</php>
+				<div class="swiper-slide" >
+					<a href="<php>echo $v['ad_link'];</php>">
+						<img src="<php> echo $site_url.$v['ad_code']; </php>" />
+					</a>
+				</div>
+				<php>}</php>
+
+			</div>
+			<div class="swiper-pagination"></div>
+		</div>
+
+		<!-- 菜单导航 -->
+		<div class="nav-wrap">
+			<php>foreach($buttonList as $k=>$v){</php>
+
+			<div class="nav-item">
+				<a href="<php>echo $v['ad_link'];</php>">
+					<span class="icon">
+						<img src="<php> echo $site_url.$v['ad_code']; </php>" />
+					</span>
+					<span class="text"><php>echo $v['position_name'];</php></span>
+				</a>
+			</div>
+			<php>}</php>
+		</div>
+
+		<!-- 抢购会员卡 -->
+		<div class="rush-vip">
+			<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$user_card[goods_id]))}" title="{$user_card['goods_name']}">
+			<div class="heading">
+				抢购会员卡
+			</div>
+			<div class="vip-container">
+				<p>会员卡</p>
+				<p>￥1000</p>
+			</div>
+			<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$user_card[goods_id]))}">
+				<div class="buy-btn">立即购买&gt;</div>
+			</a>
+			</a>
+		</div>
+
+		<!-- 超值大礼包 -->
+		<div class="gift-area">
+			<div class="headline">
+				<i class="icon"><img src="__STATIC__/images/home/gift-icon.png"></i>
+				<h3>超值大礼包</h3>
+			</div>
+			<!-- 3d滚动效果 -->
+			<div class="swiper-container gift-list">
+				<div class="swiper-wrapper">
+					<php>foreach($giftData as $k=>$v){</php>
+					<div class="swiper-slide">
+						<div class="single-item">
+							<div class="top">
+								<div class="img-wrap">
+									<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}"><img src="{$v[goods_id]|goods_thum_images=400,400}" /></a>
+								</div>
+								<div class="main">
+									<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}">
+										<h3 class="goods-name"><php> echo $v['goods_name']; </php></h3>
+									</a>
+									<p class="dec"><php> echo $v['keywords']; </php></p>
+									<p class="price">原价:<span class="original-price"><php> echo $v['goods_price']; </php></span>元</p>
+									<p class="price">会员价:<span class="vip-price"><php> echo $v['user_price']; </php></span>元</p>
+									<p class="price">省:<span class="save-money"><php> echo $v['left_price']; </php></span>元</p>
+									<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}">
+										<p class="see-btn">查看</p>
+									</a>
+								</div>
 							</div>
-						</form>
+							<div class="buy-btn">
+								立即购买
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="ds-in-bl login">
-					<span>
-                <if condition="$user_id gt 0">
-                    <a href="{:U('Mobile/User/index')}"> <img class="after_login" src="__STATIC__/images/my.png"></a>
-					 <script>
-                        var uid={$user_id};
-                    </script>
-                <else/>
-                    <a href="{:U('Mobile/User/login')}"> 登录</a>
-					 <script>
-                        var uid=0;
-                    </script>
-                </if>
-            </span>
+					<php>}</php>
+
 				</div>
 			</div>
-		</div>
-		<!--顶部搜索栏-e-->
-
-		<!--顶部滚动广告栏-s-->
-		<div class="banner ban1">
-			<div class="mslide" id="slideTpshop">
-				<ul>
-					<!--广告表-->
-					<adv pid="537" limit="3" item="v">
-						<li>
-							<a href="{$v.ad_link}">
-								<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}" alt="">
-							</a>
-						</li>
-					</adv>
-				</ul>
-			</div>
-		</div>
-		<!--顶部滚动广告栏-e-->
-		<!-- 公告区域 -->
-		<div class="tututututu">
-			<div class="tubiao">
-			<img src="__STATIC__/images/laba.png"/>
-			<span>公告</span>
-			</div>
-			<div style="position: relative;right:0rem;top:-1.5rem;height: 1.5rem;">
-			 <marquee>
-
-				{$store_notice}
-
-			 </marquee>
-		   </div>
-        </div>
-
-		<!--nav区域开始-->
-
-		<div class="nav">
-			<span><a href="{:U('Mobile/Goods/goodsList',array('id'=>$goods_id))}"><img src="__STATIC__/images/goods.png"/><p>每日好货</p></a></span>
-			<span><a href="{:U('Mobile/User/sign_list')}"><img src="__STATIC__/images/sign_in.gif"/><p>现金签到</p></a></span>
-			<span><a href="{:U('Mobile/Goods/goodsList',array('id'=>$black_technology))}"><img src="__STATIC__/images/black_technology.png"/><p>黑科技馆</p></a></span>
-			<span><a href="{:U('Mobile/Goods/goodsList',array('id'=>$quantum))}"><img src="__STATIC__/images/quantum.png"/><p>量子体验</p></a></span>
-			<span id="vip"><a href="#"><img src="__STATIC__/images/the_pig.gif"/><p>猪年大发</p></a></span>
-		</div>
-
-		<!--nav区域结束-->
-
-		<!--图片-->
-		<a href="{:U('Index/index3')}"><img src="__STATIC__/images/index_center.gif" class="pic_box" /></a>
-
-		<!--商品start-->
-		<div class="store_ear">
-			<div class="floor guesslike m-b-0">
-				<!-- <div class="banner banner_imgs">
-					<img src="__STATIC__/images/tp-will.png" alt="即将上线"/>
-				</div> -->
-				<div class="likeshop ">
-					<div id="J_ItemList">
-						<ul class="product single_item info">
-							<foreach name="favourite_goods" item="v">
-								<li>
-									<div class="similer-product products_kuang">
-										<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}" title="{$v.goods_name}">
-											<img src="{$v[goods_id]|goods_thum_images=400,400}"/>
-											<span class="similar-product-text">{$v[goods_name]|getSubstr=0,20}</span>
-										</a>
-										<span class="similar-product-price">
-											¥<span class="big-price">{$v[shop_price]}</span>
-											<a href="{:U('Goods/goodsList',['id'=>$v['cat_id']])}" title="{$v.goods_name}">
-												<span class="guess-button J_ping">看相似</span>
-											</a>
-										</span>
-									</div>
-								</li>
-							</foreach>
-						</ul>
-					</div>
-				</div>
-				<div class="jz-loods get_more">
-					<span>商品加载中...</span>
-				</div>
-				<div class="jz-loods get_end" style="display: none">
-					<span>商品已加载完...</span>
-				</div>
-			</div>
-			<!-- <img src="__STATIC__/images/guozhi.png" class="good" />
-			<div class="right_text">
-
-				<div class="top_text">
-
-					<img src="__STATIC__/images/baokuan.png" />
-					<span>【抖音爆款】充电便携榨汁机 家用迷你多功能 小型超方</span>
-
-				</div>
-				<div class="bottom_text">
-					<p class="old_buy">两个好友买过</p>
-					<p style="margin-top: .3rem;"><span class="money">￥0.00</span><span class="mianfei">免费送366件</span></p>
-
-				</div>
-
-			</div> -->
 
 		</div>
-		<!--商品end-->
-		<p class="guanzhu">点击关注公众号</p>
-		<!--底部导航-start-->
-		<form method="post"  id="recharge_form" action="{:U('Mobile/Payment/getvipPay')}">
-			<div class="loginsingup-input mobil_topup" style="padding:0 0.64rem;">
-				<input type="hidden" value="pay_code={$pay_code}" name="pay_radio" >
-				<input type="hidden" name="order_id" value="{$order.order_id}">
-		</form>
+		<div class="height-98"></div>
+		<!-- 底部导航栏 -->
+		<div class="footer">
+			<ul>
+				<li class="active">
+					<a href="./index.html">
+						<i class="home-icon"></i>
+						<span class="text">首页</span>
+					</a>
+				</li>
+				<li>
+					<a href="./category.html">
+						<i class="category-icon"></i>
+						<span class="text">分类</span>
+					</a>
+				</li>
+				<li>
+					<a href="./cart.html">
+						<i class="cart-icon"></i>
+						<span class="text">购物车</span>
+					</a>
+				</li>
+				<li>
+					<a href="./user.html">
+						<i class="user-icon"></i>
+						<span class="text">我的</span>
+					</a>
+				</li>
+			</ul>
+		</div>
 
-		<!-- <div class="bottomNavWrap container1" id="bottomNavWrap" data-id="0"></div> -->
-		<include file="public/footer_nav" />
-		<!--底部导航-end-->
-		<script src="__STATIC__/js/style.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="__STATIC__/js/sourch_submit.js"></script>
+	</div>
+	</body>
+	<script src="__STATIC__/js/jquery-1.8.3.min.js"></script>
+	<script src="__STATIC__/js/swiper.min.js"></script>
+	<script>
+		/**
+		 * 首页轮播图
+		 */
+		var mySwiper = new Swiper('.banner', {
+			loop: true,
+			paginationClickable: true,
+			autoplay: 3000,
+			autoplayDisableOnInteraction: false,
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+			},
+		})
 
-		<script>
-			$(document).ready(function(){
-				// var nowtime=Date.parse(new Date());
-				// console.log(123)
-				// console.log(mytime)
-				// nowtime=nowtime/1000;
-				var username = window.localStorage.getItem('key_username');
-				// var endtime = window.localStorage.getItem('key_endtime');
-				// console.log(uid)
-				// console.log(endtime)
-				// console.log(password)
-				// if((!username && typeof username != "undefined" && username != 0) || (!endtime && typeof endtime != "undefined" && endtime != 0)){
-
-				// }else{
-				if(username && username.length==11){
-					var data = {username:username,mobile_code:'000000',referurl:encodeURIComponent(''),sms_type:5};
-					// console.log(uid)
-					$.ajax({
-						type: 'post',
-						url: '/index.php?m=Mobile&c=User&a=do_login&t=' + Math.random(),
-						data: data,
-						dataType: 'json',
-						success: function(data) {
-							console.log(data)
-							if(data.status == 1) {
-								// window.location.href = '/index.php/mobile/index';
-							} else {
-
-							}
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown) {
-							showErrorMsg('网络异常，请稍后重试');
+		/**
+		 * 超值大礼包滑动效果
+		 */
+		var mySwiper = new Swiper(".gift-list", {
+			loop: true,
+			loopedSlides: 5,
+			slidesPerView: 'auto',
+			autoplay: true,
+			centeredSlides: true,
+			initialSlide: 0,
+			watchSlidesProgress: true,
+			pagination: {
+				el: '.banner_page',
+				clickable: true,
+			},
+			on: {
+				progress: function (progress) {
+					for (i = 0; i < this.slides.length; i++) {
+						var slide = this.slides.eq(i);
+						var slideProgress = this.slides[i].progress;
+						if (Math.abs(slideProgress) > 1) {
+							var modify = (Math.abs(slideProgress) - 1) * 0.4 + 1;
 						}
-					})
-				}
-
-				// }
-				// ajax_sourch_submit();
-			});
-			$('#vip').on('click',function(){
-				$('#recharge_form').submit();
-			})
-			/**
-			 * 继续加载猜您喜欢
-			 * */
-			var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
-			var page = 1;
-			function ajax_sourch_submit(){
-				if(before_request == 0)// 上一次请求没回来 不进行下一次请求
-					return false;
-				before_request = 0;
-				page++;
-				$.ajax({
-					type: "get",
-					url: "/index.php?m=Mobile&c=Index&a=ajaxGetMore&p=" + page,
-					success: function(data) {
-						if(data) {
-							$("#J_ItemList>ul").append(data);
-							before_request = 1;
-						} else {
-							$('.get_more').hide();
-							$('.get_end').show();
+						translate = slideProgress * modify * 318 + 'px';
+						scale = 1 - Math.abs(slideProgress) / 5;
+						zIndex = 999 - Math.abs(Math.round(10 * slideProgress));
+						slide.transform('translateX(' + translate + ') scale(' + scale + ')');
+						slide.css('zIndex', zIndex);
+						slide.css('opacity', 1);
+						if (Math.abs(slideProgress) > 3) {
+							slide.css('opacity', 0);
 						}
 					}
-				});
+				},
+				setTransition: function (transition) {
+					for (var i = 0; i < this.slides.length; i++) {
+						var slide = this.slides.eq(i)
+						slide.transition(transition);
+					}
+
+				}
 			}
-			$(".guanzhu").click(function() {
+		})
 
-				//自定页
-				layer.open({
-					type: 1,
-					title: false,
-					closeBtn: 0,
-					shadeClose: true,
-					skin: 'yourclass',
-					content: '<img src="{$wechat_qr.qr}" class="erweima"/>'
-				});
-
-			})
-				//eleId.style.right ='2.8rem';
-			// 公告区域代码
-			// var test1 = function (x, y, text){
-			// 					    // eleId 自己定义的变量名，任意取
-			// 					    // document.createElement ('marquee'); 勿改变
-			// 					        var eleId = document.createElement ('marquee');
-			// 					        eleId.style.position = 'absolute';
-			// 					        eleId.style.top = y +'rem';
-			// 					        eleId.style.right ='100rem';
-			// 							eleId.style.left ='2.8rem';
-			// 					        eleId.innerText = text;
-			// 					        document.body.appendChild (eleId);
-			// 					    }
-
-			var eleId = document.getElementsByTagName('marquee');
-			
-
-		    window.onload = function ()
-		    {
-		//     var abc = "{$store_notice}";
-			// (x轴,y轴)(150,100)
-		//         test1 (2.8, 8.5, abc);
-		       
-		    }
-
-			
-		</script>
-	</body>
+	</script>
 
 </html>

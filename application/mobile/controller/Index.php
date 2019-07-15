@@ -64,18 +64,42 @@ class Index extends MobileBase {
         }
         //首页推荐商品
         $this->assign('favourite_goods',$favourite_goods);
-         $res = Db::name('diy_ewei_shop')->where(['status' => 1])->find();
 
+        //广告
+        $adList = Db::name('ad')->where(['pid'=>537,'enabled'=>1])->order('orderby asc')->select();
+//         $res = Db::name('diy_ewei_shop')->where(['status' => 1])->find();
+
+        //按钮
+        $buttonList = Db::name('ad_position_button')->where(['is_open'=>1])->order('orderby asc')->select();
+
+        //超级大礼包
+        $user = session('user');
+        $giftData = Db::name('goods')->where(['is_gift_pack'=>1])->select();
+        foreach($giftData as $k=>$v){
+            $giftData[$k] = $v;
+            $giftData[$k]['shop_price'] = bcadd($v['shop_price'],'0.00',2);
+            $giftData[$k]['left_price'] = bcsub($v['shop_price'],price_type_data($user['level']),2);
+            $giftData[$k]['user_price'] = bcadd(price_type_data($user['level']),'0.00',2);
+        }
+
+        //会员卡
+        $user_card = Db::name('goods')->where(['member_card'=>1])->find();
+//        print_r($user_card['goods_id']);die;
+        $this->assign('giftData',$giftData);
+        $this->assign('user_card',$user_card);
         $this->assign('uid',$this->user_id);
+        $this->assign('site_url',SITE_URL);
+        $this->assign('adList',$adList);
+        $this->assign('buttonList',$buttonList);
 
-        if(!empty($res)){
-            return $this->fetch('shenqi');
-        }else{
+//        if(!empty($res)){
+//            return $this->fetch('shenqi');
+//        }else{
             return $this->fetch('index');
-         }
+//         }
 
-		
-		
+
+
     }
 
     //获取等级比例

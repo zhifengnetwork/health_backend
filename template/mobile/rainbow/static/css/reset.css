@@ -1,18 +1,137 @@
 
-body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input{ margin:0; padding:0;}
-img{ border:none; vertical-align:top;}
-input,select,textarea{ outline:none;}
-textarea{ resize:none;}
-a{ text-decoration:none;}
-.fl{ float:left;}
-.fr{ float:right;}
+*{
+	margin: 0;
+	padding: 0;
+}
 
-table{border-collapse:collapse;border-spacing:0;}
-ol,ul,li,dl{list-style:none;}
-body{font-family:"Microsoft YaHei",tahoma,verdana,arial,sans-serif;line-height:1; font-size:0.341334rem;}
-i,a,big,small,b,span,em,strong,font{ display:inline-block;font-style:normal; font-weight:normal;}
+a { text-decoration:none;color: #151515; }
 
-input::-webkit-input-placeholder{color: #999;}
-input:-moz-placeholder{color:#999;}
-input::-moz-placeholder{color:#999;}
-input:-ms-input-placeholder{color:#999;}
+input,textarea,button{
+	outline: none;
+}
+
+li{
+	list-style-type: none;
+}
+
+
+/* 按钮呈手指状态 */
+input[type=button], input[type=submit], input[type=file], button { 
+	cursor: pointer; 
+	-webkit-appearance: none; 
+}
+
+/*去除IOS下 => input, select默认样式*/
+input, select {
+	-webkit-appearance:none; 
+	background: none;
+	border: none;
+	outline: none;
+}
+
+/*清除浮动*/	
+.clearfix:before{
+	display:block;
+	clear:both;
+	content:"";
+	visibility:hidden;
+	height:0;
+}
+.clearfix:after{
+	display:block;
+	clear:both;
+	content:"";
+	visibility:hidden;
+	height:0;
+} 
+.clearfix{zoom:1}  /*是在处理兼容性问题*/
+
+/*省略号单行*/
+.publicEllipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/*省略号2行  */
+.apostrophe{
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	display: -webkit-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/*透明度*/
+.publicOpacity {
+	filter:alpha(opacity=0);          
+	-moz-opacity:0;          
+	-khtml-opacity: 0;          
+	opacity: 0; 
+}
+/*垂直居中*/
+.publicDrooping {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	margin: auto;
+}
+
+/* 不定宽高垂直居中 */
+.publicVetically{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 1;
+	transform: translate(-50%,-50%);
+}
+
+/* zyq 加 用于撑开头部 */
+.height-88 {
+    width: 100%;
+    height: .88rem;
+}
+.height-98 {
+    width: 100%;
+    height: .98rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
