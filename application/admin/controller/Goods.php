@@ -484,7 +484,7 @@ class Goods extends Base {
             $data['gold_card_price'] = 0;
             $data['brick_card_price'] = 0;
             $data['fine_brick_card_price'] = 0;
-            $data['second_buy_price'] = 0;
+            $data['second_buy_disk'] = 0;
         }
         $goods->data($data, true);
         $goods->last_update = time();

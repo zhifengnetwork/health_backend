@@ -354,7 +354,7 @@
 										<h3 class="goods-name"><php> echo $v['goods_name']; </php></h3>
 									</a>
 									<p class="dec"><php> echo $v['keywords']; </php></p>
-									<p class="price">原价:<span class="original-price"><php> echo $v['goods_price']; </php></span>元</p>
+									<p class="price">原价:<span class="original-price"><php> echo $v['shop_price']; </php></span>元</p>
 									<p class="price">会员价:<span class="vip-price"><php> echo $v['user_price']; </php></span>元</p>
 									<p class="price">省:<span class="save-money"><php> echo $v['left_price']; </php></span>元</p>
 									<a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}">
@@ -373,36 +373,9 @@
 			</div>
 
 		</div>
-		<div class="height-98"></div>
-		<!-- 底部导航栏 -->
-		<div class="footer">
-			<ul>
-				<li class="active">
-					<a href="./index.html">
-						<i class="home-icon"></i>
-						<span class="text">首页</span>
-					</a>
-				</li>
-				<li>
-					<a href="./category.html">
-						<i class="category-icon"></i>
-						<span class="text">分类</span>
-					</a>
-				</li>
-				<li>
-					<a href="./cart.html">
-						<i class="cart-icon"></i>
-						<span class="text">购物车</span>
-					</a>
-				</li>
-				<li>
-					<a href="./user.html">
-						<i class="user-icon"></i>
-						<span class="text">我的</span>
-					</a>
-				</li>
-			</ul>
-		</div>
+
+		<!--底部导航-start-->
+		<include file="public/footer_nav"/>
 
 	</div>
 	</body>

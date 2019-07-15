@@ -1,4 +1,4 @@
-<include file="public/header" title="填写订单" body="g4"/>
+<include file="public/header_old" title="填写订单" body="g4"/>
 <include file="public/header_nav" title="填写订单" href="javascript:void(0);" back="back"/>
 <script src="__PUBLIC__/js/md5.min.js"></script>
 <script type="text/javascript" src="__STATIC__/js/date.js"></script>
@@ -188,7 +188,7 @@
                                         <label class="z-toggle z-toggle-royal">
                                             <input type="checkbox" id="user_money" value="{$user['user_money']}"/>
 
-                                            <div class="z-tarck">
+                                            <div class="z-tarck" style="display: none">
                                                 <div class="z-handle">
                                                 </div>
                                             </div>
@@ -229,7 +229,7 @@
                 <!--使用余额、积分-s-->
                 <div id="balance-li" class="invoice list7">
 
-                    <div class="myorder myorder-2 p" id="paypwd_view" style="display: none">
+                    <div class="myorder myorder-2 p" id="paypwd_view">
                         <div class="content30">
                             <label>
                                 <div class="incorise">
@@ -344,9 +344,9 @@
         <div class="mask-filter-div" style="display: none;"></div>
         <div class="payit fillpay ma-to-20">
             <div class="fr submit_price">
-                <a href="javascript:void(0)" onclick="submit_order()">提交订单</a>
+                <a href="javascript:void(0)" onclick="submit_order()">立即付款</a>
             </div>
-            <div class="fl">
+            <div class="fl" style="display: none">
                 <p><span class="pmo">应付金额：</span>￥<span id="payables">0</span><span></span></p>
             </div>
         </div>
@@ -1076,6 +1076,7 @@
             }
         });
     })
+
     //支付密码是否显示
     function pay_pwd_view() {
         var user_money = $('#user_money');
@@ -1090,11 +1091,12 @@
         }else{
             $("input[name='pay_points']").val('');
         }
-        if (user_money.is(':checked') || pay_points.is(':checked')) {
-            $('#paypwd_view').show();
-        } else {
-            $('#paypwd_view').hide();
-        }
+        $('#paypwd_view').show();
+//        if (user_money.is(':checked') || pay_points.is(':checked')) {
+//
+//        } else {
+//            $('#paypwd_view').hide();
+//        }
     }
     //兑换优惠券
     function wield() {
@@ -1459,6 +1461,8 @@
     $(document).on('keyup', '#mobile_check', function() {
         $('input[name="mobile"]').val(this.value);
     })
+
+    pay_pwd_view();
 </script>
 </body>
 </html>

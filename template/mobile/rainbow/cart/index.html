@@ -1,4 +1,4 @@
-<include file="public/header" title="购物车" body=""/>
+<include file="public/header_old" title="购物车" body=""/>
 <include file="public/header_nav" title="购物车" href="javascript:history.back(-1);"/>
 <style>
     .get_mp span.disable {
@@ -263,32 +263,32 @@
          </notempty>
     </div>
 <!--看看热卖-start-->
-<div class="hotshop seehotsho">
-    <div class="thirdlogin">
-        <h4>看看热卖</h4>
-    </div>
-</div>
-<div class="floor guesslike">
-    <div class="likeshop">
-        <ul>
-            <foreach name="hot_goods" item="good">
-                <li>
-                    <a href="{:U('Mobile/goods/goodsInfo',array('id'=>$good[goods_id]))}">
-                        <div class="similer-product">
-                            <img src="{$good[goods_id]|goods_thum_images=400,400}"/>
-                            <span class="similar-product-text">{$good[goods_name]|getsubstr=0,20}</span>
-                                <span class="similar-product-price">
-                                    ¥<span class="big-price">{$good[shop_price]}</span>
-                                    <!--<span class="small-price">.00</span>-->
-                                </span>
-                        </div>
-                    </a>
-                </li>
-            </foreach>
-        </ul>
-    </div>
-    <div class="add">热卖商品实时更新，常回来看看哟~</div>
-</div>
+<!--<div class="hotshop seehotsho">-->
+    <!--<div class="thirdlogin">-->
+        <!--<h4>看看热卖</h4>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<div class="floor guesslike">-->
+    <!--<div class="likeshop">-->
+        <!--<ul>-->
+            <!--<foreach name="hot_goods" item="good">-->
+                <!--<li>-->
+                    <!--<a href="{:U('Mobile/goods/goodsInfo',array('id'=>$good[goods_id]))}">-->
+                        <!--<div class="similer-product">-->
+                            <!--<img src="{$good[goods_id]|goods_thum_images=400,400}"/>-->
+                            <!--<span class="similar-product-text">{$good[goods_name]|getsubstr=0,20}</span>-->
+                                <!--<span class="similar-product-price">-->
+                                    <!--¥<span class="big-price">{$good[shop_price]}</span>-->
+                                    <!--&lt;!&ndash;<span class="small-price">.00</span>&ndash;&gt;-->
+                                <!--</span>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</li>-->
+            <!--</foreach>-->
+        <!--</ul>-->
+    <!--</div>-->
+    <!--<div class="add">热卖商品实时更新，常回来看看哟~</div>-->
+<!--</div>-->
 <!--看看热卖-end-->
 <script type="text/javascript">
     $(document).ready(function(){

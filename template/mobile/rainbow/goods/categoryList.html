@@ -1,78 +1,241 @@
 <include file="public/header" title="所有分类"/>
-    <div class="classreturn">
-        <div class="content">
-            <div class="ds-in-bl return">
-                <a href="javascript:history.back(-1);"><img src="__STATIC__/images/return.png" alt="返回"></a>
+<script src="__STATIC__/js/jquery-1.8.3.min.js"></script>
+<style>
+    /* 广告图 */
+    .adv-container {
+        width: 7.02rem;
+        height: 2.8rem;
+        border-radius: .1rem;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .adv-container img {
+        width: 100%;
+    }
+
+    .content {
+        padding: 0 .24rem;
+        box-sizing: border-box;
+    }
+
+    /* 导航滑动效果 */
+    .nav-slide {
+        position: relative;
+        height: .6rem;
+        width: 100%;
+        overflow: hidden;
+        margin: .2rem auto;
+        background: #ffffff;
+    }
+
+    .nav-slide .scroller {
+        position: absolute
+    }
+
+    .nav-slide .scroller li {
+        height: .6rem;
+        color: #151515;
+        float: left;
+        line-height: .6rem;
+        font-size: .28rem;
+        text-align: center
+    }
+
+    .nav-slide .scroller li a {
+        color: #151515;
+        display: block;
+        margin: 0 .3rem
+    }
+
+    .nav-slide .scroller li.cur {
+        background: #f2f2f2;
+        border-radius: .08rem;
+        overflow: hidden;
+    }
+
+    .goods-list .single-item {
+        background-color: #fff;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        padding: .2rem .24rem;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-radius: .1rem;
+        margin-bottom: .1rem;
+    }
+
+    .goods-list .single-item .img-wrap {
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: .05rem;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        margin-right: .26rem;
+    }
+
+    .goods-list .single-item .img-wrap img {
+        max-width: 100%;
+    }
+
+    .goods-list .single-item .main {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+    }
+
+    .goods-list .single-item .main .goods-name {
+        color: #151515;
+        line-height: .38rem;
+        font-weight: normal;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .goods-list .single-item .main .price {
+        color: #f90a0a;
+        line-height: .84rem;
+    }
+
+    .goods-list .single-item .main .buy {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
+
+    .goods-list .single-item .main .buy .add-cart {
+        width: .32rem;
+        height: .3rem;
+        margin-left: .15rem;
+    ;
+        background: url(__STATIC__/images/category/add-cart.png) no-repeat;
+        background-size: 100%;
+    }
+
+    .goods-list .single-item .main .buy .buy-btn {
+        width: 1.5rem;
+        height: .4rem;
+        line-height: .4rem;
+        text-align: center;
+        font-size: .28rem;
+        border: .01rem solid #ff4d4d;
+        color: #f90a0a;
+    }
+</style>
+
+<div class="wrapper">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="backBtn" onclick="returnFun()"><img src="__STATIC__/images/category/back-icon.png" /></div>
+        <div class="title">分类</div>
+    </div>
+    <div class="height-88"></div>
+    <!-- 广告图 -->
+    <div class="swiper-container adv-container">
+        <div class="swiper-wrapper">
+
+            <php>foreach($adList as $k=>$v){</php>
+            <div class="swiper-slide" >
+                <a href="<php>echo $v['ad_link'];</php>">
+                    <img src="<php> echo $site_url.$v['ad_code']; </php>" />
+                </a>
             </div>
-            <div class="ds-in-bl search">
-                <form action="" method="post">
-                    <div class="sear-input">
-                        <a href="{:U('Goods/ajaxSearch')}">
-                            <input type="text" value="" placeholder="请输入您所搜索的商品">
-                        </a>
-                    </div>
-                </form>
-            </div>
-            <div class="ds-in-bl menu">
-                <a href="javascript:void(0);"><img src="__STATIC__/images/class1.png" alt="菜单"></a>
-            </div>
+            <php>}</php>
         </div>
+        <!-- <div class="swiper-pagination"></div> -->
     </div>
 
-    <!--顶部隐藏菜单-s-->
-    <include file="public/top_nav"/>
-    <!--顶部隐藏菜单-e-->
+    <div class="content">
+        <!-- 导航滑动 -->
+        <div class="nav-slide" id="nav-slide">
+            <div class="scroller">
+                <ul class="clearfix">
+                    <php>foreach($category as $k=>$v){</php>
+                    <li <php>if($cate_id==$v['id']){echo "class='cur111'";}</php>><a href="{:U('Mobile/Goods/categoryList',array('cate_id'=>$v[id]))}"><php> echo $v['name']; </php></a></li>
+                    <php>}</php>
 
-    <div class="flool classlist">
-        <div class="fl category1">
-            <ul>
-                <assign name="m" value="0"/>
-                <foreach name="goods_category_tree" item="vo" key="k">
-                    <if condition="$vo[level] eq 1">
-                        <li >
-                           <a href="javascript:void(0);" <if condition="$m eq 0"></if> data-id="{$m++}">{$vo['mobile_name']|getSubstr=0,12}</a>
-                        </li>
-                    </if>
-                </foreach>
-            </ul>
+                </ul>
+            </div>
         </div>
-        <div class="fr category2">
-            <assign name="j" value="0"/>
-            <foreach name="goods_category_tree" key="kk" item="vo">
-                <div class="branchList" >
-                	<div class="branchList-cont">
-                    <!--广告图-s-->
-	                    <div class="tp-bann"  data-id="{$j++}">
-	                        <adv  limit="1" item="v" pid="401">
-	                            <a href="{$v.ad_link}" <if condition="$v['target'] eq 1">target="_blank"</if> >
-	                                <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
-	                            </a>
-	                        </adv>
-	                    </div>
-	                    <!--广告图-e-->
-	                    <!--分类-s-->
-	                    <div class="tp-class-list">
-	                        <foreach name="vo.tmenu" item="v2" key="k2">
-	                                <h4><a href="{:U('Mobile/Goods/goodsList',array('id'=>$v2[id]))}" >{$v2['mobile_name']}</a></h4>
-	                                <ul class="tp-category">
-	                                    <foreach name="v2.sub_menu" item="v3">
-	                                            <li>
-	                                                <a href="{:U('Mobile/Goods/goodsList',array('id'=>$v3[id]))}">
-                                                        <img src="{$v3['image']|default='__STATIC__/images/zy.png'}"/>
-                                                        <!-- <img src="{$v3['id']|goods_thum_images=100,100}"/> -->
-	                                                    <p>{$v3['mobile_name']}</p>
-	                                                </a>
-	                                            </li>
-	                                    </foreach>
-	                                </ul>
-	                        </foreach>
-	                    </div>
-                    <!--分类-e-->
+
+        <div class="goods-list">
+            <php>foreach($goods as $k=>$v){</php>
+            <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}">
+            <div class="single-item">
+                <div class="img-wrap">
+                    <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}"><img src="{$v[goods_id]|goods_thum_images=400,400}" /></a>
+                </div>
+                <div class="main">
+                    <a href="{:U('Mobile/Goods/goodsInfo',array('id'=>$v[goods_id]))}">
+                        <h3 class="goods-name"><php> echo $v['keywords']; </php></h3>
+                    </a>
+                    <p class="price">￥<php> echo $v['user_price']; </php></p>
+                    <div class="buy">
+                        <span class="add-cart"></span>
+                        <span class="buy-btn">立即购买</span>
                     </div>
                 </div>
-            </foreach>
+            </div>
+            </a>
+            <php>}</php>
+
         </div>
+
     </div>
+
+
+
+</div>
+<script src="__STATIC__/js/jquery-1.8.3.min.js"></script>
+<script src="__STATIC__/js/swiper.min.js"></script>
+<script type="text/javascript" src="__STATIC__/js/iscroll.js"></script>
+<script type="text/javascript" src="__STATIC__/js/navbarscroll.js"></script>
+<script src="__STATIC__/js/public.js"></script>
+<script>
+    /**
+     * 首页轮播图
+     */
+    var mySwiper = new Swiper('.adv-container', {
+        loop: true,
+        paginationClickable: true,
+        autoplay: 3000,
+        autoplayDisableOnInteraction: false,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    })
+
+    /**
+     * 导航滑动
+     */
+    $('#nav-slide').navbarscroll({
+        defaultSelect: 0,
+        scrollerWidth: 6,
+        fingerClick: 1,
+        endClickScroll: function (obj) {
+            console.log(obj.text())
+        }
+    });
+
+
+
+</script>
+
+
 <!--底部导航-start-->
 <include file="public/footer_nav"/>
 <!--底部导航-end-->

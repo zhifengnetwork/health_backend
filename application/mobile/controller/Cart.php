@@ -215,6 +215,9 @@ class Cart extends MobileBase {
         $mobile = input('mobile/s');//自提点联系方式
         $is_virtual = input('is_virtual/d',0);
         $data = input('request.');
+        $field = "user_id, first_leader, level,parents_cache_vip,gift_pack_1,gift_pack_2,gift_pack_3,set_up_shop,user_money";
+        $UpInfo = M('users')->field($field)->where(['user_id' => $this->user_id])->find();
+        $user_money = $data['user_money'] =$UpInfo['user_money'];
         $cart_validate = Loader::validate('Cart');
         if($is_virtual === 1){
             $cart_validate->scene('is_virtual');

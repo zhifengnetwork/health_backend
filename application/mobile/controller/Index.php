@@ -73,13 +73,13 @@ class Index extends MobileBase {
         $buttonList = Db::name('ad_position_button')->where(['is_open'=>1])->order('orderby asc')->select();
 
         //超级大礼包
-        $user = session('user');
         $giftData = Db::name('goods')->where(['is_gift_pack'=>1])->select();
         foreach($giftData as $k=>$v){
             $giftData[$k] = $v;
             $giftData[$k]['shop_price'] = bcadd($v['shop_price'],'0.00',2);
-            $giftData[$k]['left_price'] = bcsub($v['shop_price'],price_type_data($user['level']),2);
-            $giftData[$k]['user_price'] = bcadd(price_type_data($user['level']),'0.00',2);
+            $giftData[$k]['user_price'] = bcadd($v[price_type_data($UpInfo['level'])],'0.00',2);
+            $giftData[$k]['left_price'] = bcsub($v['shop_price'],$v[price_type_data($UpInfo['level'])],2);
+
         }
 
         //会员卡

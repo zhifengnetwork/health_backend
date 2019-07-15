@@ -1,45 +1,32 @@
-<div class="foohi">
-    <div class="footer">
-        <ul>
-            <li>
-                <a <if condition="CONTROLLER_NAME eq 'Index'">class="yello" </if>  href="{:U('Index/index')}">
-                    <div class="icon">
-                        <div class="icon_tp1 icon_tps"><img src="__STATIC__/images/home1.png"/> </div>
-                        <div class="icon_tp2 icon_tps"><img src="__STATIC__/images/home2.png"/> </div>
-                        <p>首页</p>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a <if condition="CONTROLLER_NAME eq 'Goods'">class="yello" </if> href="{:U('Goods/categoryList')}">
-                    <div class="icon">
-                    	<div class="icon_tp1 icon_tps"><img src="__STATIC__/images/category1.png"/> </div>
-                        <div class="icon_tp2 icon_tps"><img src="__STATIC__/images/category2.png"/> </div>
-                        <p>分类</p>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a <if condition="CONTROLLER_NAME eq 'Cart'">class="yello" </if> href="{:U('Cart/index')}">
-                    <div class="icon">
-                        <div class="icon_tp1 icon_tps"><img src="__STATIC__/images/cart1.png"/> </div>
-                        <div class="icon_tp2 icon_tps"><img src="__STATIC__/images/cart2.png"/> </div>
-                        <p>购物车</p>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a <if condition="CONTROLLER_NAME eq 'User'">class="yello" </if> href="{:U('User/index')}">
-                    <div class="icon">
-                        <div class="icon_tp1 icon_tps"><img src="__STATIC__/images/user1.png"/> </div>
-                        <div class="icon_tp2 icon_tps"><img src="__STATIC__/images/user2.png"/> </div>
-                        <p>我的</p>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
+<div class="footer">
+    <ul>
+        <li <if condition="CONTROLLER_NAME eq 'Index'">class="active" </if>>
+            <a href="{:U('Index/index')}">
+                <i class="home-icon"></i>
+                <span class="text">首页</span>
+            </a>
+        </li>
+        <li <if condition="CONTROLLER_NAME eq 'Goods'">class="active" </if>>
+            <a href="{:U('Goods/categoryList')}">
+                <i class="category-icon"></i>
+                <span class="text">分类</span>
+            </a>
+        </li>
+        <li <if condition="CONTROLLER_NAME eq 'Cart'">class="active" </if>>
+            <a href="{:U('Cart/index')}">
+                <i class="cart-icon"></i>
+                <span class="text">购物车</span>
+            </a>
+        </li>
+        <li <if condition="CONTROLLER_NAME eq 'User'">class="active" </if>>
+            <a href="{:U('User/index')}">
+                <i class="user-icon"></i>
+                <span class="text">我的</span>
+            </a>
+        </li>
+    </ul>
 </div>
+
 <script src="__PUBLIC__/js/jqueryUrlGet.js"></script><!--获取get参数插件-->
 <script type="text/javascript">
 $(document).ready(function(){

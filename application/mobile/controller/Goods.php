@@ -32,10 +32,45 @@ class Goods extends MobileBase
         return $this->fetch();
     }
 
+    public function categoryList(){
+        $cate_id = input('cate_id/d',0);
+        //广告
+        $adList = Db::name('ad')->where(['pid'=>537,'enabled'=>1])->order('orderby asc')->select();
+        //分类名称
+        $category = Db::name('goods_category')->where(['level'=>1,'is_show'=>1])->order('sort_order asc')->select();
+
+        //分类下商品
+        $goods = null;
+        $field = "user_id, first_leader, level,parents_cache_vip,gift_pack_1,gift_pack_2,gift_pack_3,set_up_shop";
+        $UpInfo = M('users')->field($field)->where(['user_id' => $this->user_id])->find();
+        foreach($category as $k=>$v){
+            if($cate_id == 0){
+                $goods = Db::name('goods')->where(['cat_id'=>$v['id']])->select();
+            }elseif($cate_id == $v['id']){
+                $goods = Db::name('goods')->where(['cat_id'=>$v['id']])->select();
+            }
+        }
+        foreach($goods as $k=>$v){
+            $goods[$k] = $v;
+            $goods[$k]['shop_price'] = bcadd($v['shop_price'],'0.00',2);
+            $goods[$k]['user_price'] = bcadd($v[price_type_data($UpInfo['level'])],'0.00',2);
+            $goods[$k]['left_price'] = bcsub($v['shop_price'],$v[price_type_data($UpInfo['level'])],2);
+
+        }
+//        echo $cate_id,',';
+//        print_r($category);die;
+        $this->assign('site_url',SITE_URL);
+        $this->assign('cate_id',$cate_id);
+        $this->assign('goods',$goods);
+        $this->assign('adList',$adList);
+        $this->assign('category',$category);
+        return $this->fetch();
+    }
+
     /**
      * 分类列表显示
      */
-    public function categoryList()
+    public function categoryListOld()
     {
         return $this->fetch();
     }
@@ -272,8 +307,11 @@ class Goods extends MobileBase
         }else{
             $share_url .= '.html';
         }
-
-        
+        $field = "user_id, first_leader, level,parents_cache_vip,gift_pack_1,gift_pack_2,gift_pack_3,set_up_shop";
+        $UpInfo = M('users')->field($field)->where(['user_id' => $this->user_id])->find();
+        $goods['shop_price'] = bcadd($goods['shop_price'],'0.00',2);
+        $goods['user_price'] = bcadd($goods[price_type_data($UpInfo['level'])],'0.00',2);
+        $goods['left_price'] = bcsub($goods['shop_price'],$goods[price_type_data($UpInfo['level'])],2);
         $this->assign('recommend_goods', $recommend_goods);
         $this->assign('goods', $goods);
         $this->assign('share_url', urldecode($share_url));
